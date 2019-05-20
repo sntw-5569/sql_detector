@@ -3,7 +3,10 @@ from datetime import datetime
 import inspect
 import json
 import re
+import sys
+from pathlib import Path
 
+sys.path.append(str(Path(Path(str(Path.parent)).resolve()).parents[1]))
 from sql_detector.util import directory_if_creation
 
 CONFIG_DIR = 'config'

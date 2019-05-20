@@ -1,0 +1,11 @@
+{
+    "parameters": {
+        "get_id_list": {
+            "is_option": false
+        },
+        "get_operator_name": {
+            "target_id": "AE_01237"
+        }
+    },
+    "script_path": "do_sql"
+}

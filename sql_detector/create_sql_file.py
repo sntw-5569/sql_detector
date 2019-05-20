@@ -1,8 +1,11 @@
 import argparse
 from datetime import datetime
 import json
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
+from pathlib import Path
+import sys
 
+sys.path.append(str(Path(Path(str(Path.parent)).resolve()).parents[1]))
 from sql_detector.util import directory_if_creation
 
 OUTPUT_DIR = 'output'
@@ -13,7 +16,7 @@ def _write_to_file(file_name: str, content: str):
         file.write(content + '\n')
 
 
-def _execute_methods(script_path: str, methods: dict):
+def _execute_methods(script_path: str, methods: dict, mock_lib: MagicMock):
     try:
         exec(f'import {script_path} as target_file')
     except ModuleNotFoundError as e:
@@ -24,18 +27,20 @@ def _execute_methods(script_path: str, methods: dict):
     file_name = f'sql_{current_timestamp}'
     directory_if_creation(OUTPUT_DIR)
     for method_name, parameter in methods.items():
-        result_tuple = eval(f'target_file.{method_name}(**{parameter})')
-        _write_to_file(file_name, result_tuple[1])
+        result_sql = eval(f'target_file.{method_name}(**{parameter})')
+        args, kwargs = mock_lib.call_args_list[-1]
+
+        _write_to_file(file_name, args[-1])
 
     return file_name
 
 
 def _method_mock(script_path: str, mock_target_method: str,
                  methods: dict, execute_methods):
-    with patch(f'{script_path}.{mock_target_method}') as mock_method:
-        mock_method.return_value = ('', '')
+    with patch(f'{script_path}.{mock_target_method}') as mock_lib:
+        mock_lib.return_value = ('', '')
 
-        return execute_methods(script_path, methods)
+        return execute_methods(script_path, methods, mock_lib)
 
 
 def main(config_path: str, mock_target_method: str):

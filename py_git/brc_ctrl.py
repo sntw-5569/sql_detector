@@ -63,22 +63,3 @@ class PyGit():
         self._log('- - - - - - - - - - - - - - - - - - - - - - -', is_logging)
         
         return [b.name for b in self.Repository.branches]
-
-
-# for debug ----
-TestRun = False
-target_dir = "C:\\Users\\dt\\source\\repos\\costvisualizer3"
-repo = Repo(target_dir)
-# --------------
-
-if TestRun:
-    pyg = PyGit(target_dir)
-    if pyg.is_git_repository:
-        pyg = PyGit(target_dir)
-        pyg.branch_list()
-        # pyg.change_branch('qa')
-        pyg.change_branch('merge/pickup-from-qa')
-        exit(0)
-    else:
-        pyg._log('[-3-]< Not Found Git Repository.', True)
-        exit(1)
