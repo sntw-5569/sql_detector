@@ -28,9 +28,9 @@ def _execute_methods(script_path: str, methods: dict, mock_lib: MagicMock):
     directory_if_creation(OUTPUT_DIR)
     for method_name, parameter in methods.items():
         result_sql = eval(f'target_file.{method_name}(**{parameter})')
-        args, kwargs = mock_lib.call_args_list[-1]
+        args, kwargs = mock_lib.call_args_list[0]
 
-        _write_to_file(file_name, args[-1])
+        _write_to_file(file_name, args[0])
 
     return file_name
 
