@@ -45,7 +45,7 @@ def _method_mock(script_path: str, mock_target_method: str,
 
 def main(config_path: str, mock_target_method: str):
     dir_route = Path().resolve()
-    required_modules = ['sqldetect', 'sql_detector', 'config']
+    required_modules = ['sql_detector', 'config']
 
     for dir_name in required_modules:
         if dir_name not in str(dir_route):
