@@ -6,7 +6,7 @@ from pathlib import Path
 
 def main(file1: str, file2: str):
     dir_route = Path().resolve()
-    required_modules = ['sqldetect', 'sql_detector', 'output']
+    required_modules = ['sql_detector', 'output']
 
     for dir_name in required_modules:
         if dir_name not in str(dir_route):

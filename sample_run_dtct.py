@@ -23,10 +23,11 @@ def detect_diff_query(before_branch, after_branch, conf_file, mock_func):
         raise Exception('Not Git Repository.')
     pygit.change_branch(before_branch)
     before_output = create_sql_file.main(conf_file, mock_func)
+    pygit.change_branch(after_branch)
+
     # controlled overwrite file
     sleep(2.5)
     
-    pygit.change_branch(after_branch)
     after_output = create_sql_file.main(conf_file, mock_func)
 
     diff_checker.main(before_output, after_output)

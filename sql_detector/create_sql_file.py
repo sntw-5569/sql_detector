@@ -28,9 +28,10 @@ def _execute_methods(script_path: str, methods: dict, mock_lib: MagicMock):
     directory_if_creation(OUTPUT_DIR)
     for method_name, parameter in methods.items():
         result_sql = eval(f'target_file.{method_name}(**{parameter})')
+        print(mock_lib.call_args_list)
         args, kwargs = mock_lib.call_args_list[-1]
 
-        _write_to_file(file_name, args[-1])
+        _write_to_file(file_name, args[0])
 
     return file_name
 
@@ -45,7 +46,7 @@ def _method_mock(script_path: str, mock_target_method: str,
 
 def main(config_path: str, mock_target_method: str):
     dir_route = Path().resolve()
-    required_modules = ['sqldetect', 'sql_detector', 'config']
+    required_modules = ['sql_detector', 'config']
 
     for dir_name in required_modules:
         if dir_name not in str(dir_route):
@@ -55,7 +56,6 @@ def main(config_path: str, mock_target_method: str):
                 'Not found module path. try change current directory.')
 
     module_dir = dir_route
-    print(module_dir.resolve())
     try:
         with open(f"{module_dir.resolve()}/{config_path}", 'r') as f:
             config_json = json.load(f)
