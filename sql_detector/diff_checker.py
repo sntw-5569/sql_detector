@@ -1,12 +1,23 @@
 import argparse
 from difflib import Differ
 import sys
+from pathlib import Path
 
 
 def main(file1: str, file2: str):
+    dir_route = Path().resolve()
+    required_modules = ['sqldetect', 'sql_detector', 'output']
+
+    for dir_name in required_modules:
+        if dir_name not in str(dir_route):
+            dir_route = dir_route / dir_name
+        if not dir_route.exists():
+            raise FileNotFoundError(
+                'Not found module path. try change current directory.')
+    module_dir = dir_route
     try:
-        f1 = open(f"output/{file1}", 'r', encoding='utf-8')
-        f2 = open(f"output/{file2}", 'r', encoding='utf-8')
+        f1 = open(f"{module_dir.resolve()}/{file1}", 'r', encoding='utf-8')
+        f2 = open(f"{module_dir.resolve()}/{file2}", 'r', encoding='utf-8')
     except FileNotFoundError as e:
         print(e)
         exit(1)
