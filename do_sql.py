@@ -4,7 +4,7 @@ dbc = DataBaseConnector()
 
 
 def get_operator_name(target_id: str):
-    sql = f"select name from accounts where id = '{target_id}';"
+    sql = f"select name from accounts where id = '{target_id}' limit 1;"
     result = dbc.execute(sql)
     return result
 
@@ -15,5 +15,3 @@ def get_id_list(is_option: bool):
         sql += "where status = 'ENABLE'"
     result = dbc.execute(sql + ';')
     return result
-
-  
