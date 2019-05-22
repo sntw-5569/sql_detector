@@ -5,10 +5,10 @@ from unittest.mock import MagicMock, patch
 from pathlib import Path
 import sys
 
-sys.path.append(str(Path(Path(str(Path.parent)).resolve()).parents[1]))
+sys.path.append(str(Path().resolve().parents[1]))
 from sql_detector.util import directory_if_creation
 
-OUTPUT_DIR = 'output'
+OUTPUT_DIR = 'sql_detector/output'
 
 
 def _write_to_file(file_name: str, content: str):
@@ -28,9 +28,10 @@ def _execute_methods(script_path: str, methods: dict, mock_lib: MagicMock):
     directory_if_creation(OUTPUT_DIR)
     for method_name, parameter in methods.items():
         result_sql = eval(f'target_file.{method_name}(**{parameter})')
+        print(mock_lib.call_args_list)
         args, kwargs = mock_lib.call_args_list[-1]
 
-        _write_to_file(file_name, args[-1])
+        _write_to_file(file_name, args[0])
 
     return file_name
 
@@ -44,8 +45,19 @@ def _method_mock(script_path: str, mock_target_method: str,
 
 
 def main(config_path: str, mock_target_method: str):
+    dir_route = Path().resolve()
+    required_modules = ['sql_detector', 'config']
+
+    for dir_name in required_modules:
+        if dir_name not in str(dir_route):
+            dir_route = dir_route / dir_name
+        if not dir_route.exists():
+            raise FileNotFoundError(
+                'Not found module path. try change current directory.')
+
+    module_dir = dir_route
     try:
-        with open(f"config/{config_path}", 'r') as f:
+        with open(f"{module_dir.resolve()}/{config_path}", 'r') as f:
             config_json = json.load(f)
     except FileNotFoundError as e:
         print(e)
